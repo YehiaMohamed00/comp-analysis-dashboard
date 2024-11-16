@@ -152,11 +152,11 @@ export function DashboardComponent() {
     switch (widget) {
       case 'priceDistribution':
         return (
-          <Card className="w-full">
-            <CardHeader>
+          <Card className="w-full h-full">
+            <CardHeader className="flex-none">
               <CardTitle>Product Price Distribution</CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardContent className="flex-1">
               <ChartContainer
                 config={{
                   range: {
@@ -168,7 +168,7 @@ export function DashboardComponent() {
                     color: 'hsl(var(--chart-2))',
                   },
                 }}
-                className="h-[300px]"
+                className="w-full h-[300px] min-h-[300px]"
               >
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={priceRanges}>
@@ -186,14 +186,14 @@ export function DashboardComponent() {
         )
       case 'categoryDistribution':
         return (
-          <Card className="w-full">
-            <CardHeader>
+          <Card className="w-full h-full">
+            <CardHeader className="flex-none">
               <CardTitle>Category Distribution</CardTitle>
               <CardDescription>
                 Product distribution across categories
               </CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className="flex-1">
               <ChartContainer
                 config={{
                   value: {
@@ -201,7 +201,7 @@ export function DashboardComponent() {
                     color: 'hsl(var(--chart-1))',
                   },
                 }}
-                className="h-[300px]"
+                className="w-full h-[300px] min-h-[300px]"
               >
                 <ResponsiveContainer width="100%" height="100%">
                   <PieChart>
@@ -228,14 +228,14 @@ export function DashboardComponent() {
         )
       case 'competitorInsights':
         return (
-          <Card className="w-full">
-            <CardHeader>
+          <Card className="w-full h-full">
+            <CardHeader className="flex-none">
               <CardTitle>Competitor Insights</CardTitle>
               <CardDescription>
                 Price and market share comparison
               </CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className="flex-1">
               <ChartContainer
                 config={{
                   price: {
@@ -247,7 +247,7 @@ export function DashboardComponent() {
                     color: 'hsl(var(--chart-2))',
                   },
                 }}
-                className="h-[300px]"
+                className="w-full h-[300px] min-h-[300px]"
               >
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={competitorData}>
@@ -267,14 +267,14 @@ export function DashboardComponent() {
         )
       case 'demandPrediction':
         return (
-          <Card className="w-full">
-            <CardHeader>
+          <Card className="w-full h-full">
+            <CardHeader className="flex-none">
               <CardTitle>Demand vs Supply Prediction</CardTitle>
               <CardDescription>
                 Forecast for the next 8 months
               </CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className="flex-1">
               <ChartContainer
                 config={{
                   demand: {
@@ -286,7 +286,7 @@ export function DashboardComponent() {
                     color: 'hsl(var(--chart-2))',
                   },
                 }}
-                className="h-[300px]"
+                className="w-full h-[300px] min-h-[300px]"
               >
                 <ResponsiveContainer width="100%" height="100%">
                   <AreaChart data={demandPredictionData}>
@@ -332,7 +332,7 @@ export function DashboardComponent() {
           <TabsTrigger value="reports">Reports</TabsTrigger>
           <TabsTrigger value="notifications">Notifications</TabsTrigger>
         </TabsList>
-        <TabsContent value="overview" className="space-y-4">
+        <TabsContent value="overview" className="space-y-6">
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -386,9 +386,13 @@ export function DashboardComponent() {
             </Card>
           </div>
           <DragDropContext onDragEnd={onDragEnd}>
-            <Droppable droppableId="widgets" direction="horizontal">
+            <Droppable droppableId="widgets" direction="vertical">
               {(provided) => (
-                <div {...provided.droppableProps} ref={provided.innerRef} className="grid gap-4 md:grid-cols-2">
+                <div 
+                  {...provided.droppableProps} 
+                  ref={provided.innerRef} 
+                  className="grid gap-6 md:grid-cols-2 auto-rows-fr"
+                >
                   {widgets.map((widget, index) => (
                     <Draggable key={widget} draggableId={widget} index={index}>
                       {(provided) => (
@@ -396,6 +400,7 @@ export function DashboardComponent() {
                           ref={provided.innerRef}
                           {...provided.draggableProps}
                           {...provided.dragHandleProps}
+                          className="min-h-[400px]"
                         >
                           {renderWidget(widget)}
                         </div>
