@@ -13,6 +13,12 @@ import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/
 import { Search, ShoppingCart, Package, DollarSign, TrendingUp, Filter, Moon, Sun, Bell, ArrowUpRight, ArrowDownRight } from 'lucide-react'
 import { Switch } from '@/components/ui/switch'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
+import { DropResult } from 'react-beautiful-dnd'
+
+// Add an interface for the product data
+interface ProductData {
+  [key: string]: string;  // This allows string indexing
+}
 
 // Simulated data fetching function with error handling and data cleaning
 const fetchData = async () => {
@@ -22,9 +28,9 @@ const fetchData = async () => {
     const rows = text.split('\n').map(row => row.split(','))
     const headers = rows[0]
     const data = rows.slice(1).map(row => {
-      const obj = {}
+      const obj: ProductData = {}  // Type the object
       headers.forEach((header, index) => {
-        obj[header] = row[index] || '' // Provide default empty string if value is undefined
+        obj[header] = row[index] || '' // Now TypeScript knows obj can be indexed with strings
       })
       return obj
     }).filter(item => item['Product Name'] && item['Current Price']) // Filter out items without name or price
@@ -91,8 +97,8 @@ const notificationsData = [
 ]
 
 export function DashboardComponent() {
-  const [data, setData] = useState([])
-  const [filteredData, setFilteredData] = useState([])
+  const [data, setData] = useState<ProductData[]>([])
+  const [filteredData, setFilteredData] = useState<ProductData[]>([])
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedCategory, setSelectedCategory] = useState('All')
   const [darkMode, setDarkMode] = useState(false)
@@ -118,7 +124,7 @@ export function DashboardComponent() {
     }
   }, [darkMode])
 
-  const categories = ['All', ...new Set(data.map(item => item.Category).filter(Boolean))]
+  const categories = ['All', ...Array.from(new Set(data.map(item => item.Category).filter(Boolean)))]
 
   const categoryData = categories.slice(1).map(category => ({
     name: category,
@@ -140,7 +146,7 @@ export function DashboardComponent() {
     else priceRanges[3].count++
   })
 
-  const onDragEnd = (result) => {
+  const onDragEnd = (result: DropResult) => {
     if (!result.destination) return
     const newWidgets = Array.from(widgets)
     const [reorderedItem] = newWidgets.splice(result.source.index, 1)
@@ -148,7 +154,7 @@ export function DashboardComponent() {
     setWidgets(newWidgets)
   }
 
-  const renderWidget = (widget) => {
+  const renderWidget = (widget: string) => {
     switch (widget) {
       case 'priceDistribution':
         return (
